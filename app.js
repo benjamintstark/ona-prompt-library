@@ -210,7 +210,7 @@ function createCard(prompt) {
       
       <div class="card-expanded">
         <div class="expanded-section">
-          <div class="expanded-label">Full Content</div>
+          <div class="expanded-label">Full content</div>
           <div class="expanded-content">
             <code>${escapeHtml(prompt.content)}</code>
           </div>
@@ -227,7 +227,7 @@ function createCard(prompt) {
         
         ${prompt.exampleOutput ? `
           <div class="expanded-section">
-            <div class="expanded-label">Example Output</div>
+            <div class="expanded-label">Example output</div>
             <div class="expanded-content">${escapeHtml(prompt.exampleOutput)}</div>
           </div>
         ` : ''}
