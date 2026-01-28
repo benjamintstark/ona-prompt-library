@@ -151,7 +151,7 @@ function render() {
     featuredSection.classList.add('hidden');
   } else {
     featuredSection.classList.remove('hidden');
-    const featuredPrompts = prompts.filter(p => p.featured);
+    const featuredPrompts = prompts.filter(p => p.featured).slice(0, 3);
     featuredGrid.innerHTML = featuredPrompts.map(p => createCard(p)).join('');
   }
   
