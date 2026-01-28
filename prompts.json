@@ -223,5 +223,20 @@
     "requirements": [],
     "exampleOutput": "Installed husky, configured lint-staged for .ts/.tsx files, added commitlint",
     "featured": false
+  },
+  {
+    "id": "linear-task-management",
+    "title": "Linear Task Management",
+    "type": "tool",
+    "description": "Query and update Linear issues to track completed tasks, overdue items, and sprint progress.",
+    "content": "Use the Linear integration to manage tasks:\n- Get all issues assigned to me\n- Show overdue issues in current sprint\n- List completed tasks from last week\n- Update issue status to 'Done'\n- Add a comment to an issue\n- Get sprint burndown summary",
+    "tags": {
+      "category": "project-management",
+      "persona": ["developer", "tech-lead"],
+      "complexity": "beginner"
+    },
+    "requirements": ["Linear integration configured"],
+    "exampleOutput": "Found 3 overdue issues: DEV-123 (2 days), DEV-145 (1 day), DEV-167 (3 days). Completed 12 tasks last week.",
+    "featured": true
   }
 ]
