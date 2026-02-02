@@ -364,18 +364,17 @@ function render() {
   const hasActiveFilters = currentView === 'prompts'
     ? (searchInput.value || filterType.value || filterCategory.value || filterPersona.value)
     : currentView === 'automations'
-    ? searchInput.value
+    ? (searchInput.value || filterAutoCategory.value)
     : (searchInput.value || (cmdCategoryFilter && cmdCategoryFilter.value));
   
-  // Featured section - hide when filters are active
-  if (hasActiveFilters) {
+  // Featured section - hide when filters are active or on automations view
+  if (hasActiveFilters || currentView === 'automations') {
     featuredSection.classList.add('hidden');
   } else {
     featuredSection.classList.remove('hidden');
     const featuredItems = dataSource.filter(p => p.featured).slice(0, 3);
     featuredGrid.innerHTML = featuredItems.map(p => {
       if (currentView === 'prompts') return createCard(p);
-      if (currentView === 'automations') return createAutomationCard(p);
       return createCommandCard(p);
     }).join('');
     
@@ -383,16 +382,24 @@ function render() {
     const featuredTitle = featuredSection.querySelector('.section-title');
     if (featuredTitle) {
       if (currentView === 'prompts') featuredTitle.textContent = 'Top prompts';
-      else if (currentView === 'automations') featuredTitle.textContent = 'Top automations';
       else featuredTitle.textContent = 'Top commands';
     }
   }
   
-  // Results count
+  // Results count and section title
   let itemType = 'items';
-  if (currentView === 'automations') itemType = 'automations';
-  else if (currentView === 'commands') itemType = 'commands';
+  let sectionTitle = 'All prompts';
+  if (currentView === 'automations') {
+    itemType = 'automations';
+    sectionTitle = 'All automations';
+  } else if (currentView === 'commands') {
+    itemType = 'commands';
+    sectionTitle = 'All commands';
+  }
   resultsCount.textContent = `Showing ${filteredItems.length} of ${dataSource.length} ${itemType}`;
+  
+  const allItemsTitle = document.getElementById('all-items-title');
+  if (allItemsTitle) allItemsTitle.textContent = sectionTitle;
   
   // Grid
   if (filteredItems.length === 0) {
