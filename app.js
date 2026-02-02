@@ -480,7 +480,7 @@ function createCard(prompt) {
 function createAutomationCard(auto) {
   return `
     <article class="automation-card" data-id="${auto.id}">
-      <span class="card-badge badge-auto-category clickable-auto-category" data-category="${escapeAttr(auto.category || '')}">${escapeHtml(formatCategory(auto.category || ''))}</span>
+      <span class="card-badge badge-auto-category clickable-auto-category" data-category="${escapeAttr(auto.category || '')}">${autoCategoryIcons[auto.category] || ''}${escapeHtml(formatCategory(auto.category || ''))}</span>
       <div class="automation-card-icon">
         ${automationIcons[auto.icon] || automationIcons['ci']}
       </div>
