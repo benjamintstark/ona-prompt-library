@@ -45,6 +45,7 @@
       }
     ],
     "templateUrl": "https://app.ona.com/automations/new?template=ci-migration&repo=sample-repo",
+    "exampleRepoUrl": "https://github.com/ona-examples/ci-migration-demo",
     "featured": true
   },
   {
@@ -98,6 +99,7 @@
       }
     ],
     "templateUrl": "https://app.ona.com/automations/new?template=java-cobol-migration&repo=sample-repo",
+    "exampleRepoUrl": "https://github.com/ona-examples/java-cobol-migration-demo",
     "featured": true
   },
   {
@@ -146,6 +148,7 @@
       }
     ],
     "templateUrl": "https://app.ona.com/automations/new?template=cobol-spec-identification&repo=sample-repo",
+    "exampleRepoUrl": "https://github.com/ona-examples/cobol-spec-demo",
     "featured": true
   },
   {
@@ -194,6 +197,7 @@
       }
     ],
     "templateUrl": "https://app.ona.com/automations/new?template=code-review&repo=sample-repo",
+    "exampleRepoUrl": "https://github.com/ona-examples/code-review-demo",
     "featured": true
   },
   {
@@ -247,6 +251,7 @@
       }
     ],
     "templateUrl": "https://app.ona.com/automations/new?template=cve-remediation&repo=sample-repo",
+    "exampleRepoUrl": "https://github.com/ona-examples/cve-remediation-demo",
     "featured": true
   }
 ]

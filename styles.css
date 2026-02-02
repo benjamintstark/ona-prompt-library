@@ -633,6 +633,12 @@ body {
   line-height: 1.6;
 }
 
+.automation-detail-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
 .btn-use-template-large {
   display: inline-flex;
   align-items: center;
@@ -640,6 +646,26 @@ body {
   font-size: 1rem;
   font-weight: 600;
   text-decoration: none;
+}
+
+.btn-example-repo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: none;
+  background: var(--color-bg);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  transition: all 0.2s;
+}
+
+.btn-example-repo:hover {
+  background: var(--color-bg-secondary);
+  border-color: var(--color-text-secondary);
 }
 
 .automation-detail-content {
