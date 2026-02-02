@@ -247,6 +247,8 @@ function switchView(view) {
   if (commandsFilters) commandsFilters.classList.toggle('hidden', view !== 'commands');
   const commandsIntro = document.getElementById('commands-intro');
   if (commandsIntro) commandsIntro.classList.toggle('hidden', view !== 'commands');
+  const automationsIntro = document.getElementById('automations-intro');
+  if (automationsIntro) automationsIntro.classList.toggle('hidden', view !== 'automations' || selectedAutomation !== null);
   
   // Update search placeholder
   if (view === 'prompts') {
