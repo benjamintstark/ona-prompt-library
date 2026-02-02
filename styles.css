@@ -524,7 +524,8 @@ body {
   line-height: 1.5;
 }
 
-.automation-card .badge-category {
+.automation-card .badge-auto-category {
+  align-self: flex-start;
   margin-bottom: 1rem;
 }
 

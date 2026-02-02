@@ -242,7 +242,7 @@ function switchView(view) {
   
   // Update filters visibility
   promptsFilters.classList.toggle('hidden', view !== 'prompts');
-  automationsFilters.classList.toggle('hidden', view !== 'automations');
+  automationsFilters.classList.toggle('hidden', view !== 'automations' || selectedAutomation !== null);
   const commandsFilters = document.getElementById('commands-filters');
   if (commandsFilters) commandsFilters.classList.toggle('hidden', view !== 'commands');
   const commandsIntro = document.getElementById('commands-intro');
@@ -309,11 +309,14 @@ function applyFilters() {
       return true;
     });
   } else if (currentView === 'automations') {
+    const category = filterAutoCategory.value;
+    
     filteredItems = automations.filter(auto => {
       if (search) {
         const searchableText = `${auto.title} ${auto.description}`.toLowerCase();
         if (!searchableText.includes(search)) return false;
       }
+      if (category && auto.category !== category) return false;
       return true;
     });
   } else if (currentView === 'commands') {
@@ -477,12 +480,12 @@ function createCard(prompt) {
 function createAutomationCard(auto) {
   return `
     <article class="automation-card" data-id="${auto.id}">
+      <span class="badge badge-auto-category clickable-auto-category" data-category="${escapeAttr(auto.category || '')}">${escapeHtml(formatCategory(auto.category || ''))}</span>
       <div class="automation-card-icon">
         ${automationIcons[auto.icon] || automationIcons['ci']}
       </div>
       <p class="automation-card-title">${escapeHtml(auto.title)}</p>
       <p class="automation-card-description">${escapeHtml(auto.shortDescription || '')}</p>
-      <span class="badge badge-category">${escapeHtml(formatCategory(auto.category || ''))}</span>
       <button class="btn btn-use-template" data-id="${auto.id}">
         View template
       </button>
@@ -685,6 +688,17 @@ function attachCardListeners() {
       selectedAutomation = automations.find(a => a.id === id);
       updateURL();
       render();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+  
+  // Automation category badges - click to filter
+  document.querySelectorAll('.clickable-auto-category').forEach(badge => {
+    badge.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const category = badge.dataset.category;
+      filterAutoCategory.value = category;
+      applyFilters();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   });
