@@ -4,6 +4,7 @@ let automations = [];
 let commands = [];
 let filteredItems = [];
 let currentView = 'prompts';
+let selectedAutomation = null; // For automation detail view
 
 // DOM Elements
 const searchInput = document.getElementById('search');
@@ -82,6 +83,31 @@ const commandCategoryIcons = {
   'code-development': `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>`
 };
 
+// Icons for automation types
+const automationIcons = {
+  'ci': `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>`,
+  'migration': `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>`,
+  'docs': `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>`,
+  'review': `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>`,
+  'security': `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>`
+};
+
+// Icons for workflow step types
+const stepTypeIcons = {
+  'trigger': `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="10 8 16 12 10 16 10 8"></polyline></svg>`,
+  'prompt': `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>`,
+  'shell': `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>`,
+  'pr': `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="18" r="3"></circle><circle cx="6" cy="6" r="3"></circle><path d="M13 6h3a2 2 0 0 1 2 2v7"></path><line x1="6" y1="9" x2="6" y2="21"></line></svg>`
+};
+
+// Step type labels
+const stepTypeLabels = {
+  'trigger': 'Trigger',
+  'prompt': 'Prompt',
+  'shell': 'Shell Script',
+  'pr': 'Pull Request'
+};
+
 // Initialize
 async function init() {
   try {
@@ -119,6 +145,12 @@ function loadFiltersFromURL() {
     switchView(view);
   }
   
+  // Check for automation detail view
+  const automationId = params.get('automation');
+  if (automationId && view === 'automations') {
+    selectedAutomation = automations.find(a => a.id === automationId);
+  }
+  
   if (params.get('search')) searchInput.value = params.get('search');
   
   // Prompts filters
@@ -143,6 +175,7 @@ function updateURL() {
   const params = new URLSearchParams();
   
   if (currentView !== 'prompts') params.set('view', currentView);
+  if (selectedAutomation) params.set('automation', selectedAutomation.id);
   if (searchInput.value) params.set('search', searchInput.value);
   
   if (currentView === 'prompts') {
@@ -274,18 +307,11 @@ function applyFilters() {
       return true;
     });
   } else if (currentView === 'automations') {
-    const category = filterAutoCategory.value;
-    const trigger = filterAutoTrigger.value;
-    const scope = filterAutoScope.value;
-    
     filteredItems = automations.filter(auto => {
       if (search) {
-        const searchableText = `${auto.title} ${auto.description} ${auto.content}`.toLowerCase();
+        const searchableText = `${auto.title} ${auto.description}`.toLowerCase();
         if (!searchableText.includes(search)) return false;
       }
-      if (category && auto.tags.category !== category) return false;
-      if (trigger && auto.tags.trigger !== trigger) return false;
-      if (scope && auto.tags.scope !== scope) return false;
       return true;
     });
   } else if (currentView === 'commands') {
@@ -318,6 +344,12 @@ function clearFilters() {
 
 // Render
 function render() {
+  // Handle automation detail view
+  if (currentView === 'automations' && selectedAutomation) {
+    renderAutomationDetail();
+    return;
+  }
+  
   let dataSource;
   if (currentView === 'prompts') dataSource = prompts;
   else if (currentView === 'automations') dataSource = automations;
@@ -327,7 +359,7 @@ function render() {
   const hasActiveFilters = currentView === 'prompts'
     ? (searchInput.value || filterType.value || filterCategory.value || filterPersona.value)
     : currentView === 'automations'
-    ? (searchInput.value || filterAutoCategory.value || filterAutoTrigger.value || filterAutoScope.value)
+    ? searchInput.value
     : (searchInput.value || (cmdCategoryFilter && cmdCategoryFilter.value));
   
   // Featured section - hide when filters are active
@@ -439,68 +471,105 @@ function createCard(prompt) {
   `;
 }
 
-// Create automation card HTML
+// Create automation card HTML (Tembo-style)
 function createAutomationCard(auto) {
-  const categoryLabel = formatLabel(auto.tags.category);
-  const triggerLabel = formatLabel(auto.tags.trigger);
-  const scopeLabel = formatLabel(auto.tags.scope);
-  
   return `
-    <article class="card card-automation" data-id="${auto.id}">
-      <div class="card-content">
-        <div class="card-header">
-          <h3 class="card-title">${escapeHtml(auto.title)}</h3>
-          <div class="card-badges">
-            <span class="card-badge badge-auto-category clickable-auto-category" data-category="${auto.tags.category}">${autoCategoryIcons[auto.tags.category] || ''}${categoryLabel}</span>
-            <span class="card-badge badge-trigger clickable-trigger" data-trigger="${auto.tags.trigger}">
-              ${triggerIcons[auto.tags.trigger] || ''}
-              ${triggerLabel}
-            </span>
-          </div>
-        </div>
-        
-        <p class="card-description">${escapeHtml(auto.description)}</p>
-        
-        <div class="card-preview">
-          <code>${escapeHtml(auto.content)}</code>
-        </div>
+    <article class="automation-card" data-id="${auto.id}">
+      <div class="automation-card-icon">
+        ${automationIcons[auto.icon] || automationIcons['ci']}
       </div>
-      
-      <div class="card-actions">
-        <button class="btn btn-copy" data-content="${escapeAttr(auto.content)}">
-          Copy
-        </button>
-        <button class="btn btn-expand">
-          Expand
-        </button>
-      </div>
-      
-      <div class="card-expanded">
-        ${auto.requirements && auto.requirements.length > 0 ? `
-          <div class="expanded-section">
-            <div class="expanded-label">Requirements</div>
-            <ul class="requirements-list">
-              ${auto.requirements.map(r => `<li>${escapeHtml(r)}</li>`).join('')}
-            </ul>
-          </div>
-        ` : ''}
-        
-        ${auto.exampleOutput ? `
-          <div class="expanded-section">
-            <div class="expanded-label">Example output</div>
-            <div class="expanded-content">${escapeHtml(auto.exampleOutput)}</div>
-          </div>
-        ` : ''}
-        
-        <div class="expanded-section">
-          <div class="expanded-label">Scope</div>
-          <div class="card-tags">
-            <span class="tag">${scopeLabel}</span>
-          </div>
-        </div>
-      </div>
+      <p class="automation-card-title">${escapeHtml(auto.title)}</p>
+      <button class="btn btn-use-template" data-id="${auto.id}">
+        Use template
+      </button>
     </article>
   `;
+}
+
+// Render automation detail view
+function renderAutomationDetail() {
+  const auto = selectedAutomation;
+  if (!auto) return;
+  
+  // Hide normal sections
+  featuredSection.classList.add('hidden');
+  document.querySelector('.controls').classList.add('hidden');
+  document.querySelector('.all-prompts-section').classList.add('hidden');
+  
+  // Show detail view
+  let detailContainer = document.getElementById('automation-detail');
+  if (!detailContainer) {
+    detailContainer = document.createElement('div');
+    detailContainer.id = 'automation-detail';
+    document.querySelector('.main').appendChild(detailContainer);
+  }
+  detailContainer.classList.remove('hidden');
+  
+  detailContainer.innerHTML = `
+    <div class="automation-detail">
+      <button class="btn-back" id="back-to-automations">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        Back to automations
+      </button>
+      
+      <div class="automation-detail-header">
+        <div class="automation-detail-icon">
+          ${automationIcons[auto.icon] || automationIcons['ci']}
+        </div>
+        <h1 class="automation-detail-title">${escapeHtml(auto.title)}</h1>
+        <p class="automation-detail-description">${escapeHtml(auto.description)}</p>
+        <a href="${auto.templateUrl}" target="_blank" class="btn btn-primary btn-use-template-large">
+          Use this template
+        </a>
+      </div>
+      
+      <div class="automation-detail-content">
+        <div class="automation-benefits">
+          <h3>What this does</h3>
+          <ul class="benefits-list">
+            ${auto.benefits.map((b, i) => `
+              <li>
+                <span class="benefit-number">${i + 1}</span>
+                <span class="benefit-text">${escapeHtml(b)}</span>
+              </li>
+            `).join('')}
+          </ul>
+        </div>
+        
+        <div class="automation-workflow">
+          <h3>Workflow</h3>
+          <div class="workflow-steps">
+            ${auto.steps.map((step, i) => `
+              <div class="workflow-step">
+                <div class="step-connector ${i === 0 ? 'first' : ''} ${i === auto.steps.length - 1 ? 'last' : ''}">
+                  <div class="step-dot"></div>
+                  ${i < auto.steps.length - 1 ? '<div class="step-line"></div>' : ''}
+                </div>
+                <div class="step-content">
+                  <div class="step-type step-type-${step.type}">
+                    ${stepTypeIcons[step.type] || ''}
+                    <span>${stepTypeLabels[step.type] || step.type}</span>
+                  </div>
+                  <h4 class="step-title">${escapeHtml(step.title)}</h4>
+                  <p class="step-description">${escapeHtml(step.content)}</p>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  // Add back button listener
+  document.getElementById('back-to-automations').addEventListener('click', () => {
+    selectedAutomation = null;
+    detailContainer.classList.add('hidden');
+    document.querySelector('.controls').classList.remove('hidden');
+    document.querySelector('.all-prompts-section').classList.remove('hidden');
+    updateURL();
+    render();
+  });
 }
 
 // Create command card HTML
@@ -593,24 +662,25 @@ function attachCardListeners() {
     });
   });
   
-  // Automation category badges - click to filter
-  document.querySelectorAll('.clickable-auto-category').forEach(badge => {
-    badge.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const category = badge.dataset.category;
-      filterAutoCategory.value = category;
-      applyFilters();
+  // Automation cards - click to view detail
+  document.querySelectorAll('.automation-card').forEach(card => {
+    card.addEventListener('click', (e) => {
+      const id = card.dataset.id;
+      selectedAutomation = automations.find(a => a.id === id);
+      updateURL();
+      render();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   });
   
-  // Trigger badges - click to filter
-  document.querySelectorAll('.clickable-trigger').forEach(badge => {
-    badge.addEventListener('click', (e) => {
+  // Use template buttons on automation cards
+  document.querySelectorAll('.automation-card .btn-use-template').forEach(btn => {
+    btn.addEventListener('click', (e) => {
       e.stopPropagation();
-      const trigger = badge.dataset.trigger;
-      filterAutoTrigger.value = trigger;
-      applyFilters();
+      const id = btn.dataset.id;
+      selectedAutomation = automations.find(a => a.id === id);
+      updateURL();
+      render();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   });

@@ -1,152 +1,242 @@
 [
   {
-    "id": "cve-remediation-auto",
-    "title": "CVE remediation across repos",
-    "type": "automation",
-    "description": "AI engineers that remediate vulnerabilities across your entire codebase simultaneously. They don't only bump dependencies, but migrate code and run tests before creating pull requests.",
-    "content": "Trigger: CVE discovery or scheduled scan\n\nWorkflow:\n1. Scan all repositories for vulnerable dependencies\n2. Identify affected packages and severity levels\n3. Determine safe upgrade paths\n4. Apply fixes and migrate breaking changes\n5. Run test suites to verify fixes\n6. Create pull requests with detailed changelogs",
-    "tags": {
-      "category": "security",
-      "trigger": "event",
-      "scope": "multi-repo"
+    "id": "ci-migration",
+    "title": "CI migration",
+    "description": "Migrate CI/CD pipelines from one platform to another across your entire codebase. Ona converts pipeline configurations, updates secrets references, and validates the migration.",
+    "icon": "ci",
+    "trigger": {
+      "type": "manual",
+      "label": "Manual trigger or scheduled",
+      "details": "Runs across all repositories with CI configuration"
     },
-    "requirements": ["GitHub/GitLab integration", "Repository access"],
-    "exampleOutput": "Remediated CVE-2024-1234 across 47 repositories. Created 47 PRs, all tests passing.",
+    "benefits": [
+      "Migrate hundreds of pipelines in parallel",
+      "Automatic conversion of pipeline syntax",
+      "Validates migrations before creating PRs",
+      "Preserves secrets and environment variables"
+    ],
+    "steps": [
+      {
+        "type": "trigger",
+        "title": "Manual trigger",
+        "content": "Select source platform (GitLab CI, Jenkins, CircleCI) and target platform (GitHub Actions)"
+      },
+      {
+        "type": "prompt",
+        "title": "Analyze existing pipelines",
+        "content": "Scan all repositories for CI configuration files. Identify pipeline stages, jobs, dependencies, and secrets used."
+      },
+      {
+        "type": "prompt",
+        "title": "Convert pipeline syntax",
+        "content": "Transform pipeline configuration to target platform format. Map equivalent actions, runners, and caching strategies."
+      },
+      {
+        "type": "shell",
+        "title": "Validate configuration",
+        "content": "Run syntax validation on generated pipeline files. Check for missing secrets or unsupported features."
+      },
+      {
+        "type": "pr",
+        "title": "Create migration PRs",
+        "content": "Create pull requests with new CI configuration. Include migration notes and rollback instructions."
+      }
+    ],
+    "templateUrl": "https://app.ona.com/automations/new?template=ci-migration&repo=sample-repo",
     "featured": true
   },
   {
-    "id": "readme-automation",
-    "title": "README and documentation automation",
-    "type": "automation",
-    "description": "Deploy AI engineers that enforce documentation standards organization-wide. Generate Backstage YAML, README files, and onboarding docs automatically. Keep everything current as code evolves.",
-    "content": "Trigger: Code changes or scheduled\n\nWorkflow:\n1. Analyze repository structure and code\n2. Generate or update README.md with current info\n3. Create Backstage catalog-info.yaml\n4. Generate API documentation from code\n5. Update onboarding guides\n6. Create PR with documentation changes",
-    "tags": {
-      "category": "documentation",
-      "trigger": "event",
-      "scope": "multi-repo"
+    "id": "java-cobol-migration",
+    "title": "Java/COBOL migration",
+    "description": "Modernize legacy COBOL or Java applications by converting them to modern languages and frameworks. Ona understands business logic and preserves functionality.",
+    "icon": "migration",
+    "trigger": {
+      "type": "manual",
+      "label": "Manual trigger",
+      "details": "Runs on selected legacy codebases"
     },
-    "requirements": ["Repository access"],
-    "exampleOutput": "Updated documentation in 23 repositories. Generated 15 new README files, 23 Backstage YAML files.",
+    "benefits": [
+      "Preserve business logic during migration",
+      "Generate comprehensive test suites",
+      "Create documentation for migrated code",
+      "Incremental migration with rollback support"
+    ],
+    "steps": [
+      {
+        "type": "trigger",
+        "title": "Select migration scope",
+        "content": "Choose source files or modules to migrate. Define target language (Java, TypeScript, Python) and framework."
+      },
+      {
+        "type": "prompt",
+        "title": "Analyze legacy code",
+        "content": "Parse COBOL/legacy Java code structure. Identify data structures, business rules, and external dependencies."
+      },
+      {
+        "type": "prompt",
+        "title": "Generate modern equivalent",
+        "content": "Create equivalent code in target language. Maintain same inputs, outputs, and business logic."
+      },
+      {
+        "type": "prompt",
+        "title": "Create test suite",
+        "content": "Generate comprehensive tests comparing legacy and modern implementations. Ensure functional parity."
+      },
+      {
+        "type": "shell",
+        "title": "Run validation tests",
+        "content": "Execute test suite against both implementations. Report any behavioral differences."
+      },
+      {
+        "type": "pr",
+        "title": "Create migration PR",
+        "content": "Submit pull request with migrated code, tests, and documentation. Include migration guide."
+      }
+    ],
+    "templateUrl": "https://app.ona.com/automations/new?template=java-cobol-migration&repo=sample-repo",
     "featured": true
   },
   {
-    "id": "dev-environment-automation",
-    "title": "Dev environment standardization",
-    "type": "automation",
-    "description": "Standardize development environments across all repositories. AI engineers create consistent configs that work for human developers, AI agents, and workflows alike.",
-    "content": "Trigger: New repository or scheduled audit\n\nWorkflow:\n1. Scan repositories for dev environment configs\n2. Identify missing or outdated configurations\n3. Generate devcontainer.json with standard tooling\n4. Add consistent VS Code settings and extensions\n5. Create Docker configurations if needed\n6. Submit PRs with environment updates",
-    "tags": {
-      "category": "dev-environment",
-      "trigger": "event",
-      "scope": "multi-repo"
+    "id": "cobol-spec-identification",
+    "title": "COBOL spec identification",
+    "description": "Analyze COBOL codebases to extract and document business specifications. Ona reads legacy code and produces human-readable documentation of what the system does.",
+    "icon": "docs",
+    "trigger": {
+      "type": "manual",
+      "label": "Manual trigger",
+      "details": "Runs on COBOL source directories"
     },
-    "requirements": ["Repository access"],
-    "exampleOutput": "Standardized dev environments in 89 repositories. Added devcontainer.json to 34 repos missing configs.",
+    "benefits": [
+      "Extract business rules from legacy code",
+      "Generate readable specifications",
+      "Create data flow diagrams",
+      "Document undocumented systems"
+    ],
+    "steps": [
+      {
+        "type": "trigger",
+        "title": "Select COBOL sources",
+        "content": "Choose COBOL programs, copybooks, and JCL to analyze."
+      },
+      {
+        "type": "prompt",
+        "title": "Parse code structure",
+        "content": "Analyze COBOL divisions, sections, and paragraphs. Map data definitions and file structures."
+      },
+      {
+        "type": "prompt",
+        "title": "Extract business logic",
+        "content": "Identify business rules, calculations, and decision trees. Document conditional logic and data transformations."
+      },
+      {
+        "type": "prompt",
+        "title": "Generate specifications",
+        "content": "Create structured specification documents. Include data dictionaries, process flows, and business rule catalogs."
+      },
+      {
+        "type": "pr",
+        "title": "Create documentation PR",
+        "content": "Submit pull request with generated specifications. Organize by program, module, or business domain."
+      }
+    ],
+    "templateUrl": "https://app.ona.com/automations/new?template=cobol-spec-identification&repo=sample-repo",
     "featured": true
   },
   {
-    "id": "pr-review-automation",
-    "title": "Automatic PR review",
-    "type": "automation",
-    "description": "AI engineers that automatically review every pull request for code quality, security vulnerabilities, and best practices before human review.",
-    "content": "Trigger: Pull request created or updated\n\nWorkflow:\n1. Analyze PR diff for code changes\n2. Check for security vulnerabilities\n3. Review code style and best practices\n4. Identify potential bugs or edge cases\n5. Suggest improvements with inline comments\n6. Approve or request changes based on findings",
-    "tags": {
-      "category": "code-review",
-      "trigger": "pull-request",
-      "scope": "single-repo"
+    "id": "code-review",
+    "title": "Code review",
+    "description": "Automatically review every pull request for code quality, security vulnerabilities, and adherence to team standards. Ona provides actionable feedback before human review.",
+    "icon": "review",
+    "trigger": {
+      "type": "pull-request",
+      "label": "Pull request opened or updated",
+      "details": "Runs on every PR across configured repositories"
     },
-    "requirements": ["GitHub/GitLab integration"],
-    "exampleOutput": "Reviewed PR #234: Found 2 security issues, 3 style improvements. Requested changes with inline comments.",
-    "featured": false
+    "benefits": [
+      "Catch issues before human review",
+      "Enforce consistent coding standards",
+      "Identify security vulnerabilities early",
+      "Reduce review cycle time"
+    ],
+    "steps": [
+      {
+        "type": "trigger",
+        "title": "PR opened",
+        "content": "Triggered when a pull request is opened or new commits are pushed."
+      },
+      {
+        "type": "prompt",
+        "title": "Analyze code changes",
+        "content": "Review diff for code quality, patterns, and potential bugs. Check against team coding standards."
+      },
+      {
+        "type": "prompt",
+        "title": "Security scan",
+        "content": "Check for security vulnerabilities, hardcoded secrets, and unsafe patterns."
+      },
+      {
+        "type": "prompt",
+        "title": "Generate review comments",
+        "content": "Create inline comments for issues found. Prioritize by severity and provide fix suggestions."
+      },
+      {
+        "type": "shell",
+        "title": "Post review",
+        "content": "Submit review comments to the pull request. Approve, request changes, or comment based on findings."
+      }
+    ],
+    "templateUrl": "https://app.ona.com/automations/new?template=code-review&repo=sample-repo",
+    "featured": true
   },
   {
-    "id": "test-generation-automation",
-    "title": "Automatic test generation",
-    "type": "automation",
-    "description": "Generate missing unit tests and integration tests for new code. AI engineers analyze code coverage and create tests to fill gaps.",
-    "content": "Trigger: PR created or scheduled coverage audit\n\nWorkflow:\n1. Analyze code coverage reports\n2. Identify untested functions and branches\n3. Generate unit tests for uncovered code\n4. Create integration tests for new endpoints\n5. Run generated tests to verify they pass\n6. Submit PR with new test files",
-    "tags": {
-      "category": "testing",
-      "trigger": "pull-request",
-      "scope": "single-repo"
+    "id": "cve-remediation",
+    "title": "CVE remediation",
+    "description": "Automatically detect and fix security vulnerabilities across your entire codebase. Ona patches dependencies, migrates breaking changes, and validates fixes with tests.",
+    "icon": "security",
+    "trigger": {
+      "type": "scheduled",
+      "label": "Daily security scan",
+      "details": "Runs nightly across all repositories"
     },
-    "requirements": ["Test framework configured"],
-    "exampleOutput": "Generated 24 new unit tests, increased coverage from 67% to 84%.",
-    "featured": false
-  },
-  {
-    "id": "dependency-update-automation",
-    "title": "Scheduled dependency updates",
-    "type": "automation",
-    "description": "Keep dependencies up to date across all repositories with scheduled automated updates. AI engineers handle breaking changes and run tests.",
-    "content": "Trigger: Weekly schedule\n\nWorkflow:\n1. Check for outdated dependencies in all repos\n2. Prioritize updates by security and staleness\n3. Apply updates in isolated branches\n4. Migrate code for breaking changes\n5. Run full test suites\n6. Create PRs for successful updates",
-    "tags": {
-      "category": "maintenance",
-      "trigger": "scheduled",
-      "scope": "multi-repo"
-    },
-    "requirements": ["Repository access"],
-    "exampleOutput": "Updated 156 dependencies across 34 repositories. 12 required code migrations, all tests passing.",
-    "featured": false
-  },
-  {
-    "id": "migration-automation",
-    "title": "Framework migration at scale",
-    "type": "automation",
-    "description": "Migrate frameworks, libraries, or patterns across your entire codebase. AI engineers handle the tedious work of updating hundreds of files.",
-    "content": "Trigger: Manual or scheduled\n\nWorkflow:\n1. Analyze codebase for migration targets\n2. Create migration plan with priorities\n3. Apply transformations to each file\n4. Update imports and dependencies\n5. Run tests after each batch\n6. Create PRs grouped by repository",
-    "tags": {
-      "category": "migrations",
-      "trigger": "manual",
-      "scope": "multi-repo"
-    },
-    "requirements": ["Repository access"],
-    "exampleOutput": "Migrated 234 files from Jest to Vitest across 12 repositories. All 1,847 tests passing.",
-    "featured": false
-  },
-  {
-    "id": "code-standards-enforcement",
-    "title": "Code standards enforcement",
-    "type": "automation",
-    "description": "Automatically fix code style violations and enforce coding standards across all repositories without manual intervention.",
-    "content": "Trigger: PR created or scheduled\n\nWorkflow:\n1. Run linters and formatters on codebase\n2. Identify style violations and anti-patterns\n3. Auto-fix issues where possible\n4. Add inline comments for manual fixes needed\n5. Update ESLint/Prettier configs if needed\n6. Create PRs with fixes",
-    "tags": {
-      "category": "code-quality",
-      "trigger": "pull-request",
-      "scope": "multi-repo"
-    },
-    "requirements": ["Linter configuration"],
-    "exampleOutput": "Fixed 1,234 style violations across 56 repositories. Updated 12 ESLint configs to latest standards.",
-    "featured": false
-  },
-  {
-    "id": "api-versioning-automation",
-    "title": "API versioning and deprecation",
-    "type": "automation",
-    "description": "Manage API versioning across services. AI engineers update clients when APIs change and handle deprecation notices.",
-    "content": "Trigger: API schema change detected\n\nWorkflow:\n1. Detect API schema changes in services\n2. Identify all client repositories using the API\n3. Generate updated client code\n4. Add deprecation warnings for old endpoints\n5. Update API documentation\n6. Create PRs in all affected repositories",
-    "tags": {
-      "category": "api-management",
-      "trigger": "event",
-      "scope": "multi-repo"
-    },
-    "requirements": ["API schema definitions", "Repository access"],
-    "exampleOutput": "Updated 23 client repositories for API v2.3.0. Added deprecation notices for 4 endpoints.",
-    "featured": false
-  },
-  {
-    "id": "incident-response-automation",
-    "title": "Incident response automation",
-    "type": "automation",
-    "description": "When incidents occur, AI engineers automatically gather context, identify potential causes, and prepare hotfix branches.",
-    "content": "Trigger: PagerDuty/Opsgenie alert\n\nWorkflow:\n1. Receive incident alert with error details\n2. Search codebase for related code\n3. Analyze recent deployments and changes\n4. Identify potential root causes\n5. Prepare hotfix branch with suggested fixes\n6. Notify on-call engineer with context",
-    "tags": {
-      "category": "incident-response",
-      "trigger": "event",
-      "scope": "single-repo"
-    },
-    "requirements": ["Alerting integration", "Repository access"],
-    "exampleOutput": "Incident INC-456: Identified null pointer in UserService.ts:234. Hotfix branch ready with fix.",
-    "featured": false
+    "benefits": [
+      "Remediate vulnerabilities at scale",
+      "Handle breaking changes automatically",
+      "Validate fixes with test suites",
+      "Generate compliance reports"
+    ],
+    "steps": [
+      {
+        "type": "trigger",
+        "title": "Scheduled scan",
+        "content": "Daily scan at 2:00 AM UTC. Checks all repositories for known CVEs."
+      },
+      {
+        "type": "shell",
+        "title": "Scan dependencies",
+        "content": "Run security scanners (npm audit, Snyk, Dependabot) across all repositories. Collect vulnerability reports."
+      },
+      {
+        "type": "prompt",
+        "title": "Analyze vulnerabilities",
+        "content": "Prioritize CVEs by severity and exploitability. Identify safe upgrade paths and breaking changes."
+      },
+      {
+        "type": "prompt",
+        "title": "Apply fixes",
+        "content": "Update vulnerable dependencies. Migrate code for breaking API changes. Update lock files."
+      },
+      {
+        "type": "shell",
+        "title": "Run tests",
+        "content": "Execute full test suite to validate fixes. Report any test failures."
+      },
+      {
+        "type": "pr",
+        "title": "Create remediation PRs",
+        "content": "Submit pull requests for each repository with fixes. Include CVE details and changelog."
+      }
+    ],
+    "templateUrl": "https://app.ona.com/automations/new?template=cve-remediation&repo=sample-repo",
+    "featured": true
   }
 ]
